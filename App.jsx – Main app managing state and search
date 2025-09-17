@@ -1,0 +1,57 @@
+import React, { useState } from "react";
+import BookList from "./BookList";
+import AddBookForm from "./AddBookForm";
+
+const App = () => {
+  const [books, setBooks] = useState([
+    { title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
+    { title: "1984", author: "George Orwell" },
+    { title: "To Kill a Mockingbird", author: "Harper Lee" },
+  ]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleAddBook = (book) => {
+    setBooks([...books, book]);
+  };
+
+  const handleRemoveBook = (index) => {
+    const newBooks = books.filter((_, i) => i !== index);
+    setBooks(newBooks);
+  };
+
+  const filteredBooks = books.filter(
+    (book) =>
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div style={{ width: "400px", margin: "50px auto", fontFamily: "Arial" }}>
+      <h1>Library Management</h1>
+
+      {/* Search Box */}
+      <input
+        type="text"
+        placeholder="Search by title or author"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "8px",
+          marginBottom: "20px",
+          borderRadius: "4px",
+          border: "1px solid #ccc",
+        }}
+      />
+
+      {/* Add Book Form */}
+      <AddBookForm onAdd={handleAddBook} />
+
+      {/* Book List */}
+      <BookList books={filteredBooks} onRemove={handleRemoveBook} />
+    </div>
+  );
+};
+
+export default App;
