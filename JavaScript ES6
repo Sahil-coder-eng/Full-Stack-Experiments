@@ -1,0 +1,45 @@
+// Base class: Person
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  displayInfo() {
+    console.log(`Name: ${this.name}, Age: ${this.age}`);
+  }
+}
+
+// Subclass: Student
+class Student extends Person {
+  constructor(name, age, course) {
+    super(name, age); // Call base class constructor
+    this.course = course;
+  }
+
+  // Override displayInfo to include course
+  displayInfo() {
+    console.log(`Student Name: ${this.name}, Age: ${this.age}, Course: ${this.course}`);
+  }
+}
+
+// Subclass: Teacher
+class Teacher extends Person {
+  constructor(name, age, subject) {
+    super(name, age); // Call base class constructor
+    this.subject = subject;
+  }
+
+  // Override displayInfo to include subject
+  displayInfo() {
+    console.log(`Teacher Name: ${this.name}, Age: ${this.age}, Subject: ${this.subject}`);
+  }
+}
+
+// Creating instances
+const student1 = new Student("Alice", 20, "Mathematics");
+const teacher1 = new Teacher("Mr. Smith", 45, "Physics");
+
+// Demonstrating inheritance and method overriding
+student1.displayInfo(); // Student Name: Alice, Age: 20, Course: Mathematics
+teacher1.displayInfo(); // Teacher Name: Mr. Smith, Age: 45, Subject: Physics
