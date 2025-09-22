@@ -1,57 +1,73 @@
 import React, { useState } from "react";
-import BookList from "./BookList";
-import AddBookForm from "./AddBookForm";
+import "./App.css";
 
-const App = () => {
+export default function App() {
   const [books, setBooks] = useState([
-    { title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
-    { title: "1984", author: "George Orwell" },
-    { title: "To Kill a Mockingbird", author: "Harper Lee" },
+    { id: 1, title: "1984", author: "George Orwell" },
+    { id: 2, title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
+    { id: 3, title: "To Kill a Mockingbird", author: "Harper Lee" },
   ]);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
 
-  const handleAddBook = (book) => {
-    setBooks([...books, book]);
+  const addBook = (e) => {
+    e.preventDefault();
+    if (!newTitle.trim() || !newAuthor.trim()) return;
+    setBooks([
+      ...books,
+      { id: Date.now(), title: newTitle.trim(), author: newAuthor.trim() },
+    ]);
+    setNewTitle("");
+    setNewAuthor("");
   };
 
-  const handleRemoveBook = (index) => {
-    const newBooks = books.filter((_, i) => i !== index);
-    setBooks(newBooks);
+  const removeBook = (id) => {
+    setBooks(books.filter((b) => b.id !== id));
   };
 
-  const filteredBooks = books.filter(
-    (book) =>
-      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchTerm.toLowerCase())
+  const filtered = books.filter(
+    (b) =>
+      b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      b.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div style={{ width: "400px", margin: "50px auto", fontFamily: "Arial" }}>
+    <div className="container">
       <h1>Library Management</h1>
 
-      {/* Search Box */}
       <input
-        type="text"
+        className="search"
         placeholder="Search by title or author"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "8px",
-          marginBottom: "20px",
-          borderRadius: "4px",
-          border: "1px solid #ccc",
-        }}
       />
 
-      {/* Add Book Form */}
-      <AddBookForm onAdd={handleAddBook} />
+      <form className="add-form" onSubmit={addBook}>
+        <input
+          placeholder="New book title"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+        />
+        <input
+          placeholder="New book author"
+          value={newAuthor}
+          onChange={(e) => setNewAuthor(e.target.value)}
+        />
+        <button type="submit">Add Book</button>
+      </form>
 
-      {/* Book List */}
-      <BookList books={filteredBooks} onRemove={handleRemoveBook} />
+      <ul className="book-list">
+        {filtered.map((b) => (
+          <li key={b.id}>
+            <span>
+              <strong>{b.title}</strong> by {b.author}
+            </span>
+            <button onClick={() => removeBook(b.id)}>Remove</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
-
-export default App;
+}
